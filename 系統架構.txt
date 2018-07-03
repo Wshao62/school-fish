@@ -1,0 +1,4 @@
+軟體端         樹梅派       硬體端
+                python       modbus
+ pygame                      步進馬達
+ 

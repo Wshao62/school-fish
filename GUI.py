@@ -9,6 +9,7 @@ while 1:
         import time
         import pygame
         from pygame.locals import *
+        import threading
     except (ModuleNotFoundError, ImportError):  # python import error
         err = str(sys.exc_info()[1])[17:-1]
         if (lestModName != err):
@@ -32,6 +33,10 @@ pygame.init()
 pygame.display.set_caption(u"釣魚遊戲")
 canvas = pygame.display.set_mode((canvas_width, canvas_height))
 font = pygame.font.SysFont('simhei', 18)
+background = pygame.image.load(sys.path[0] + "/img/normal.jpg").convert()
+fish = pygame.image.load(sys.path[0] + "/img/2.jpg").convert()
+
+print(background)
 
 
 def showFont(text, x, y):
@@ -41,79 +46,40 @@ def showFont(text, x, y):
 
 
 block = (0, 0, 0)
-locals_x = 400
-locals_y = 300
 
 
-def move_D(x, y):  # 往下
-    for i in range(20):
-        canvas.fill(block)
-        showFont("魚", x, y + i*12)
-        pygame.display.update()
-        time.sleep(0.1)
-
-
-def move_U(x, y):  # 往上
-    for i in range(20):
-        canvas.fill(block)
-        showFont("魚", x, y - i*12)
-        pygame.display.update()
-        time.sleep(0.1)
-
-
-def move_L(x, y):  # 往右
-    for i in range(20):
-        canvas.fill(block)
-        showFont("魚", x + i*12, y)
-        pygame.display.update()
-        time.sleep(0.1)
-
-
-def move_R(x, y):  # 往左
-    for i in range(20):
-        canvas.fill(block)
-        showFont("魚", x - i*12, y)
-        pygame.display.update()
-        time.sleep(0.1)
-
-
-def move_RU(x, y):  # 往左上
-    for i in range(20):
-        canvas.fill(block)
-        showFont("魚", x - i*12, y + i*12)
-        pygame.display.update()
-        time.sleep(0.1)
-
-
-def move_LU(x, y):  # 往右上
-    for i in range(20):
-        canvas.fill(block)
-        showFont("魚", x + i*12, y - i*12)
-        pygame.display.update()
-        time.sleep(0.1)
-
-
-def move_RD(x, y):  # 往左下
-    for i in range(20):
-        canvas.fill(block)
-        showFont("魚", x - i*12, y + i*12)
-        pygame.display.update()
-        time.sleep(0.1)
-
-
-def move_RD(x, y):  # 往右下
-    for i in range(20):
-        canvas.fill(block)
-        showFont("魚", x + i*12, y + i*12)
-        pygame.display.update()
-        time.sleep(0.1)
-
-
-move_U(400, 300)
-move_D(400, 300)
-move_L(400, 300)
-move_R(400, 300)
-move_RU(400, 300)
-move_LU(400, 300)
-move_RD(400, 300)
-move_LD(400, 300)
+x = 400
+y = 300
+movex = 0
+movey = 0
+def move():
+    input
+while True:
+    # 游戏主循环
+    for event in pygame.event.get():
+        if event.type == QUIT:
+            # 接收到退出事件后退出程序
+            exit()
+        if event.type==KEYDOWN:
+            if event.key==K_LEFT:
+                movex=-1
+            if event.key==K_RIGHT:
+                movex=+1
+            elif event.key==K_UP:
+                movey=-1
+            elif event.key==K_DOWN:
+                movey=+1
+        if event.type==KEYUP:
+            if event.key==K_LEFT:
+                movex=0
+            if event.key==K_RIGHT:
+                movex=0
+            elif event.key==K_UP:
+                movey=0
+            elif event.key==K_DOWN:
+                movey=0
+    x += movex
+    y += movey
+    canvas.blit(background, (0, 0))
+    canvas.blit(fish, (x, y))
+    pygame.display.update()
