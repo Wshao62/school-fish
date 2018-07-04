@@ -21,23 +21,32 @@ while 1:
         del lestModName
         break
 # import自動修復 程式碼片段
-LED_PIN = 16
+IN1 = 2
+IN2 = 3
 
-GPIO.setmode(GPIO.BOARD)
-GPIO.setup(LED_PIN, GPIO.OUT)
-p = GPIO.PWM(LED_PIN, 50)
-p.start(0)
 
+GPIO.setmode(GPIO.BCM) # 選擇輸出腳位模式(BCM or BORAD)
+GPIO.setup(IN1, GPIO.OUT)# 設定輸出模式
+GPIO.setup(IN2, GPIO.OUT)# 設定輸出模式
 try:
-    while True:
-        for dc in range(0, 101, 5):
-            p.ChangeDutyCycle(dc)
-            time.sleep(0.1)
-        for dc in range(100, -1, -5):
-            p.ChangeDutyCycle(dc)
-            time.sleep(0.1)
+    
+    for i in range(100):
+        GPIO.output(IN1,True)
+        GPIO.output(IN1,False)
+        time.sleep(0.05)
+    GPIO.output(IN2,True)
+    GPIO.output(IN2,False)
+    for i in range(100):
+        GPIO.output(IN1,True)
+        GPIO.output(IN1,False)
+        time.sleep(0.05)
 except:
-    pass
+    print("有問題")
+finally:
+    GPIO.cleanup()
 
-p.stop()
-GPIO.cleanup()
+
+# 指令樹查
+
+# GPIO.PWM(LED_PIN, 50) #參數(腳位, 總時常50s)
+# GPIO.PWM.start(0)配合上面使用 有start就要有stop()
