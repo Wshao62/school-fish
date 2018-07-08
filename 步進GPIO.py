@@ -25,20 +25,20 @@ IN1 = 2
 IN2 = 3
 
 
-GPIO.setmode(GPIO.BCM) # 選擇輸出腳位模式(BCM or BORAD)
-GPIO.setup(IN1, GPIO.OUT)# 設定輸出模式
-GPIO.setup(IN2, GPIO.OUT)# 設定輸出模式
+GPIO.setmode(GPIO.BCM)  # 選擇輸出腳位模式(BCM or BORAD)
+GPIO.setup(IN1, GPIO.OUT)  # 設定輸出模式
+GPIO.setup(IN2, GPIO.OUT)  # 設定輸出模式
 try:
-    
+
     for i in range(100):
-        GPIO.output(IN1,True)
-        GPIO.output(IN1,False)
+        GPIO.output(IN1, True)
+        GPIO.output(IN1, False)
         time.sleep(0.05)
-    GPIO.output(IN2,True)
-    GPIO.output(IN2,False)
+    GPIO.output(IN2, True)
+    GPIO.output(IN2, False)
     for i in range(100):
-        GPIO.output(IN1,True)
-        GPIO.output(IN1,False)
+        GPIO.output(IN1, True)
+        GPIO.output(IN1, False)
         time.sleep(0.05)
 except:
     print("有問題")

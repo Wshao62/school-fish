@@ -17,10 +17,11 @@ from modbus_tk import modbus_tcp
 def main():
     """main"""
 
-    logger = modbus_tk.utils.create_logger(name="console", record_format="%(message)s")
+    logger = modbus_tk.utils.create_logger(
+        name="console", record_format="%(message)s")
 
     try:
-        #Create the server
+        # Create the server
         server = modbus_tcp.TcpServer()
         logger.info("running...")
         logger.info("enter 'quit' for closing the server")
