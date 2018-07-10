@@ -34,12 +34,15 @@ try:
         GPIO.output(IN1, True)
         GPIO.output(IN1, False)
         time.sleep(0.05)
+
     GPIO.output(IN2, True)
     GPIO.output(IN2, False)
+
     for i in range(100):
         GPIO.output(IN1, True)
         GPIO.output(IN1, False)
         time.sleep(0.05)
+
 except:
     print("有問題")
 finally:
