@@ -22,5 +22,4 @@ while 1:
 # import自動修復 程式碼片段
 
 stepMotor = StepMotor(2,3,4,14)
-stepMotor.run_clockwise(1200)
-stepMotor.run_counter_clockwise(1200)
+stepMotor.motorTest()
