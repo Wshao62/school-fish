@@ -47,37 +47,40 @@ def showFont(text, x, y):
 
 block = (0, 0, 0)
 
-
 x = 400
 y = 300
 movex = 0
 movey = 0
+
+
 def move():
     input
+
+
 while True:
     # 游戏主循环
     for event in pygame.event.get():
         if event.type == QUIT:
             # 接收到退出事件后退出程序
             exit()
-        if event.type==KEYDOWN:
-            if event.key==K_LEFT:
-                movex=-1
-            if event.key==K_RIGHT:
-                movex=+1
-            elif event.key==K_UP:
-                movey=-1
-            elif event.key==K_DOWN:
-                movey=+1
-        if event.type==KEYUP:
-            if event.key==K_LEFT:
-                movex=0
-            if event.key==K_RIGHT:
-                movex=0
-            elif event.key==K_UP:
-                movey=0
-            elif event.key==K_DOWN:
-                movey=0
+        if event.type == KEYDOWN:
+            if event.key == K_LEFT:
+                movex = -1
+            if event.key == K_RIGHT:
+                movex = +1
+            elif event.key == K_UP:
+                movey = -1
+            elif event.key == K_DOWN:
+                movey = +1
+        if event.type == KEYUP:
+            if event.key == K_LEFT:
+                movex = 0
+            if event.key == K_RIGHT:
+                movex = 0
+            elif event.key == K_UP:
+                movey = 0
+            elif event.key == K_DOWN:
+                movey = 0
     x += movex
     y += movey
     canvas.blit(background, (0, 0))
