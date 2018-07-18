@@ -47,29 +47,29 @@ class StepMotor():
 
     def run_clockwise(self, turns):  # 向右
 
-        GPIO.output(self.In2, False)
+        GPIO.output(self.In2, True)
         time.sleep(0.0001)
         for i in range(turns):
             if(GPIO.input(self.right) == 1):
                 print('開關觸發')
                 return -1
-            GPIO.output(self.In1, True)
-            time.sleep(0.001)
             GPIO.output(self.In1, False)
+            time.sleep(0.001)
+            GPIO.output(self.In1, True)
 
     def run_counter_clockwise(self, turns):  # 向左
 
-        GPIO.output(self.In2, True)
+        GPIO.output(self.In2, False)
         time.sleep(0.0001)
         for i in range(turns):
             if((GPIO.input(self.left) == 1)):
                 print('開關觸發')
                 return -1
-            GPIO.output(self.In1, True)
-            time.sleep(0.001)
             GPIO.output(self.In1, False)
+            time.sleep(0.001)
+            GPIO.output(self.In1, True)
 
-        GPIO.output(self.In2, False)
+        GPIO.output(self.In2, True)
 
     def run_Zone(self):  # 回到中心
 
@@ -103,6 +103,27 @@ class StepMotor():
     def rightCellBack(self):
         print('right中斷')
         pass
+
+
+class DcStepMotor():
+    #           =====init 函數=====
+    # 滑軌　約　1100步　到底
+    # In1 　 脈波輸出腳　   接PUL
+    # In2 　 正反轉控制腳   接DIR
+    def __init__(self, In1, In2):
+        GPIO.setmode(GPIO.BCM)  # 選擇輸出腳位模式(BCM or BORAD)
+        GPIO.setup(In1, GPIO.OUT)  # 設定輸出模式
+        GPIO.setup(In2, GPIO.OUT)  # 設定輸出模式
+
+        self.In1 = In1
+        self.In2 = In2
+
+    def run(self, turns):
+        GPIO.output(self.In1, True)
+        for i in range(turns):
+            GPIO.output(self.In1, False)
+            time.sleep(0.001)
+            GPIO.output(self.In1, True)
 
 
 class DCmotor():

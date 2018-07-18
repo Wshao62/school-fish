@@ -7,6 +7,7 @@ while 1:
         sys.path.append(sys.path[0] + '/mods/')  # 將自己mods的路徑加入倒python lib裡面
         # 要import的東西放這下面
         from motorContor import StepMotor
+        from motorContor import DCStepMotor
     except (ModuleNotFoundError, ImportError):  # python import error
         err = str(sys.exc_info()[1])[17:-1]
         if (lestModName != err):
@@ -23,3 +24,5 @@ while 1:
 
 stepMotor = StepMotor(2,3,4,14)
 stepMotor.motorTest()
+dcstepMotor = DCStepMotor(17,18)
+dcstepMotor.run(100)
