@@ -68,14 +68,14 @@ def blend_color(color1, color2, blend_factor):
 
 def edge_checkge(point, movex, movey):
 
-    if point[0] <= 0 or point[0] >= canvas_width - fish.get_rect()[2] :
+    if point[0] <= 0 or point[0] >= canvas_width - fish.get_rect()[2]:
         if point[0] <= 0:
             point[0] += 1
         else:
             point[0] -= 1
     else:
         point[0] += movex
-    if point[1] <= 0 or point[1] >= canvas_height - fish.get_rect()[3] :
+    if point[1] <= 0 or point[1] >= canvas_height - fish.get_rect()[3]:
         if point[1] <= 0:
             point[1] += 1
         else:
@@ -92,6 +92,11 @@ def powd_checkge(powd, powdcount):
         powd = 1
     else:
         powd += powdcount
+    if powd >= 600:
+            showFont("掉魚線斷了，本次遊戲結束", 350, 300)
+            pygame.display.update()
+            time.sleep(3)
+            
     return powd
 
 
@@ -117,14 +122,29 @@ def fish_trus(fish, movex, movey):
 
     return fish
 
-def fish_size(fish,point):
-    if point[1]:
-        pygame.transform.scale(fish,(80,60))
-    pass
 
-def fish_Game(point,fish,powd,movex,movey,canvas,powdcount):
-    temp_fish = fish_trus(fish, movex, movey)
-    point=[400,300]
+def fish_size(fish, point):
+    if point[1] == 300:
+        x = 1
+    else:
+        x = point[1]/300
+    fish = pygame.transform.scale(fish,(int(65*x),int(116*x)))
+    return fish
+
+def win_check(powd):
+    win_time=10
+    count=0
+    while True:
+        if powd > 500 and powd < 600:
+            count += 1
+            if count >= win_time:
+                print("you win")
+        else:
+            count=0
+
+def fish_Game(point, fish, powd, movex, movey, canvas, powdcount):
+    temp_fish=fish_trus(fish, movex, movey)
+    point=[400, 300]
     while True:
         # 游戏主循环
         # movex = random.randint(-1, 1)
@@ -135,51 +155,44 @@ def fish_Game(point,fish,powd,movex,movey,canvas,powdcount):
                 exit()
             if event.type == KEYDOWN:
                 if event.key == K_LEFT:
-                    movex = -1
+                    movex=-1
                 if event.key == K_RIGHT:
-                    movex = +1
+                    movex=+1
                 elif event.key == K_UP:
-                    movey = -1
+                    movey=-1
                 elif event.key == K_DOWN:
-                    movey = +1
+                    movey=+1
                 if event.key == K_d:
-                    powdcount = +1
-                elif event.key == K_a:
-                    powdcount = -1
+                    powdcount=+2
             if event.type == KEYUP:
                 if event.key == K_LEFT:
-                    movex = 0
+                    movex=0
                 if event.key == K_RIGHT:
-                    movex = 0
+                    movex=0
                 elif event.key == K_UP:
-                    movey = 0
+                    movey=0
                 elif event.key == K_DOWN:
-                    movey = 0
+                    movey=0
                 if event.key == K_d:
-                    powdcount = 0
-                elif event.key == K_a:
-                    powdcount = 0
+                    powdcount=0
         # 拉力條判斷
-        if powd >= 600:
-            showFont("掉魚線斷了，本次遊戲結束", 350, 300)
-            pygame.display.update()
-            time.sleep(3)
-            break
+        
 
         # 拉力條
-        powd = powd_checkge(powd, powdcount)
-        my_rect3 = Rect(50, 0, powd, 20)
+        powd=powd_checkge(powd, powdcount-1)
+        my_rect3=Rect(50, 0, powd, 20)
         # 魚 座標
-        point = edge_checkge(point, movex, movey)
-
+        point=edge_checkge(point, movex, movey)
+        
         # 繪圖區
         canvas.blit(background, (0, 0))
         if movex or movey:
-            temp_fish = fish_trus(fish, movex, movey)
+            temp_fish=fish_trus(fish, movex, movey)
+        temp_fish = fish_size(temp_fish, point)
         canvas.blit(temp_fish, point)
 
-        factor = powd/600
-        powdcolr = blend_color([0, 255, 0], [255, 60, 20], factor)
+        factor=powd/600
+        powdcolr=blend_color([0, 255, 0], [255, 60, 20], factor)
         pygame.draw.rect(canvas, powdcolr, my_rect3)
         # 寫字區
         showFont("拉力:" + str(powd), 0, 0)
@@ -192,11 +205,18 @@ def mainWindows(til_background):
             # 接收到退出事件后退出程序
                 exit()
             if event.type == KEYDOWN:
-                fish_Game(point,fish,powd,movex,movey,canvas,powdcount)
-        canvas.blit(til_background, (0,0))
+                fish_Game(point, fish, powd, movex, movey, canvas, powdcount)
+        canvas.blit(til_background, (0, 0))
         showFont("案任意鍵開始遊戲", 300, 300)
         pygame.display.update()
 
 
 if __name__ == '__main__':
     mainWindows(til_background)
+"""
+if powd >= 600:
+            showFont("掉魚線斷了，本次遊戲結束", 350, 300)
+            pygame.display.update()
+            time.sleep(3)
+            break
+"""
