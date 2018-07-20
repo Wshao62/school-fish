@@ -3,4 +3,4 @@ import threading
 
 
 
-GUI.fish_Game()
+GUI.mainWindows()

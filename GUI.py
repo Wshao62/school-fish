@@ -12,6 +12,7 @@ while 1:
         from pygame.locals import *
         from pygame import event
         import threading
+        import motorContor
     except (ModuleNotFoundError, ImportError):  # python import error
         err = str(sys.exc_info()[1])[17:-1]
         if (lestModName != err):
@@ -92,10 +93,6 @@ def powd_checkge(powd, powdcount):
         powd = 1
     else:
         powd += powdcount
-    if powd >= 600:
-            showFont("掉魚線斷了，本次遊戲結束", 350, 300)
-            pygame.display.update()
-            time.sleep(3)
             
     return powd
 
@@ -143,8 +140,12 @@ def win_check(powd):
             count=0
 
 def fish_Game(point, fish, powd, movex, movey, canvas, powdcount):
+    # 遊戲用的變數
     temp_fish=fish_trus(fish, movex, movey)
     point=[400, 300]
+    wincount = 0
+    # 硬體 變數處始畫
+
     while True:
         # 游戏主循环
         # movex = random.randint(-1, 1)
@@ -176,8 +177,20 @@ def fish_Game(point, fish, powd, movex, movey, canvas, powdcount):
                 if event.key == K_d:
                     powdcount=0
         # 拉力條判斷
-        
-
+        if powd >= 600:
+            showFont("掉魚線斷了，本次遊戲結束", 350, 300)
+            pygame.display.update()
+            time.sleep(3)
+            break
+        elif powd>500 and powd <600:
+            wincount += 1
+            if wincount>500:
+                showFont("你贏了 獲得一條魚XD", 350, 300)
+                pygame.display.update()
+                time.sleep(3)
+                break
+        else:
+            wincount == 0
         # 拉力條
         powd=powd_checkge(powd, powdcount-1)
         my_rect3=Rect(50, 0, powd, 20)
@@ -198,7 +211,7 @@ def fish_Game(point, fish, powd, movex, movey, canvas, powdcount):
         showFont("拉力:" + str(powd), 0, 0)
         pygame.display.update()
 
-def mainWindows(til_background):
+def mainWindows():
     while True:
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -212,7 +225,7 @@ def mainWindows(til_background):
 
 
 if __name__ == '__main__':
-    mainWindows(til_background)
+    mainWindows()
 """
 if powd >= 600:
             showFont("掉魚線斷了，本次遊戲結束", 350, 300)
