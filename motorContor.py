@@ -25,7 +25,7 @@ while 1:
 
 class StepMotor():
     #           =====init 函數=====
-    # 滑軌　約　1100步　到底
+    # 滑軌　約　5500步　到底
     # In1 　 脈波輸出腳　   接PUL
     # In2 　 正反轉控制腳   接DIR
     # left 　右邊微動開關   靠近馬達的微動開關　高電位智能
@@ -38,70 +38,77 @@ class StepMotor():
         GPIO.setup(left, GPIO.IN)
         GPIO.setup(right, GPIO.IN)
 
-        GPIO.add_event_detect(left, GPIO.RISING, callback=self.leftCellBack)
-        GPIO.add_event_detect(right, GPIO.RISING, callback=self.rightCellBack)
+        #GPIO.add_event_detect(left, GPIO.RISING, callback=self.leftCellBack)
+        #GPIO.add_event_detect(right, GPIO.RISING, callback=self.rightCellBack)
         self.In1 = In1
         self.In2 = In2
         self.left = left
         self.right = right
+        self.maxstep = 5500
+        self.Last_degree = 0
+
+        # self.run_Zone()
+
+    def run_degree(self, degree):
+        if degree>100 or degree<0:
+            return -1
+        tempDegree = degree-self.Last_degree
+        self.Last_degree = degree
+        if tempDegree > 0:
+            self.run_clockwise(tempDegree*55)
+        elif tempDegree <0:
+            self.run_counter_clockwise(-tempDegree*55)
+        else:
+            pass
+        return 1
 
     def run_clockwise(self, turns):  # 向右
 
-        GPIO.output(self.In2, True)
+        turns = int(turns)
+        GPIO.output(self.In2, False)
         time.sleep(0.0001)
         for i in range(turns):
             if(GPIO.input(self.right) == 1):
-                print('開關觸發')
+                print('右開關觸發 座標到100')
+                self.Last_degree = 100
                 return -1
             GPIO.output(self.In1, False)
-            time.sleep(0.001)
+            time.sleep(0.0001)
             GPIO.output(self.In1, True)
 
     def run_counter_clockwise(self, turns):  # 向左
 
-        GPIO.output(self.In2, False)
+        turns = int(turns)
+        GPIO.output(self.In2, True)
         time.sleep(0.0001)
         for i in range(turns):
             if((GPIO.input(self.left) == 1)):
-                print('開關觸發')
+                print('左開關觸發 座標到0')
+                self.Last_degree = 0
                 return -1
             GPIO.output(self.In1, False)
-            time.sleep(0.001)
+            time.sleep(0.0001)
             GPIO.output(self.In1, True)
-
-        GPIO.output(self.In2, True)
-
-    def run_Zone(self):  # 回到中心
 
         GPIO.output(self.In2, False)
-        time.sleep(0.0001)
-        for i in range(1100):
-            if((GPIO.input(self.left) == 1) or (GPIO.input(self.right) == 1)):
-                print('開關觸發')
-                GPIO.output(self.In2, True)
-                time.sleep(0.0001)
-                for i in range(550):  # 走550步回到　中心
-                    GPIO.output(self.In1, True)
-                    time.sleep(0.001)
-                    GPIO.output(self.In1, False)
-                GPIO.output(self.In2, False)
-                return 1
 
-            GPIO.output(self.In1, True)
-            time.sleep(0.001)
-            GPIO.output(self.In1, False)
+    def run_Zone(self):  # 回到中心
+        self.run_counter_clockwise(55500)
+        self.run_clockwise(2250)
+        self.Last_degree = 50
 
     def motorTest(self):
         self.run_clockwise(1100)
         self.run_counter_clockwise(1100)
         self.run_Zone()
+        
 
-    def leftCellBack(self):
-        print('left中斷')
+    def leftCellBack(self,a):
+        print('left中斷',a)
         pass
 
-    def rightCellBack(self):
-        print('right中斷')
+    def rightCellBack(self,a):
+        print('right中斷',a)
         pass
 
 

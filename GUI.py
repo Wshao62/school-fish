@@ -12,7 +12,8 @@ while 1:
         from pygame.locals import *
         from pygame import event
         import threading
-        import motorContor
+        from motorContor import StepMotor
+        # import motorContor
     except (ModuleNotFoundError, ImportError):  # python import error
         err = str(sys.exc_info()[1])[17:-1]
         if (lestModName != err):
@@ -26,7 +27,7 @@ while 1:
         del lestModName
         break
 # import自動修復 程式碼片段
-
+RLmotor = StepMotor(2, 3, 4, 14)
 
 # 視窗大小.
 canvas_width = 800
@@ -93,7 +94,7 @@ def powd_checkge(powd, powdcount):
         powd = 1
     else:
         powd += powdcount
-            
+
     return powd
 
 
@@ -120,32 +121,41 @@ def fish_trus(fish, movex, movey):
     return fish
 
 
+def fish_motor(point):
+    global RLmotor,canvas_width
+    x = int(point[0]/canvas_width*100)
+    RLmotor.run_degree(x)
+
+
 def fish_size(fish, point):
     if point[1] == 300:
         x = 1
     else:
         x = point[1]/300
-    fish = pygame.transform.scale(fish,(int(65*x),int(116*x)))
+    fish = pygame.transform.scale(fish, (int(65*x), int(116*x)))
     return fish
 
+
 def win_check(powd):
-    win_time=10
-    count=0
+    win_time = 10
+    count = 0
     while True:
         if powd > 500 and powd < 600:
             count += 1
             if count >= win_time:
                 print("you win")
         else:
-            count=0
+            count = 0
+
 
 def fish_Game(point, fish, powd, movex, movey, canvas, powdcount):
     # 遊戲用的變數
-    temp_fish=fish_trus(fish, movex, movey)
-    point=[400, 300]
+    temp_fish = fish_trus(fish, movex, movey)
+    point = [400, 300]
     wincount = 0
     # 硬體 變數處始畫
-
+    global RLmotor
+    RLmotor.run_Zone()
     while True:
         # 游戏主循环
         # movex = random.randint(-1, 1)
@@ -156,35 +166,35 @@ def fish_Game(point, fish, powd, movex, movey, canvas, powdcount):
                 exit()
             if event.type == KEYDOWN:
                 if event.key == K_LEFT:
-                    movex=-1
+                    movex = -1
                 if event.key == K_RIGHT:
-                    movex=+1
+                    movex = +1
                 elif event.key == K_UP:
-                    movey=-1
+                    movey = -1
                 elif event.key == K_DOWN:
-                    movey=+1
+                    movey = +1
                 if event.key == K_d:
-                    powdcount=+2
+                    powdcount = +2
             if event.type == KEYUP:
                 if event.key == K_LEFT:
-                    movex=0
+                    movex = 0
                 if event.key == K_RIGHT:
-                    movex=0
+                    movex = 0
                 elif event.key == K_UP:
-                    movey=0
+                    movey = 0
                 elif event.key == K_DOWN:
-                    movey=0
+                    movey = 0
                 if event.key == K_d:
-                    powdcount=0
+                    powdcount = 0
         # 拉力條判斷
         if powd >= 600:
             showFont("掉魚線斷了，本次遊戲結束", 350, 300)
             pygame.display.update()
             time.sleep(3)
             break
-        elif powd>500 and powd <600:
+        elif powd > 500 and powd < 600:
             wincount += 1
-            if wincount>500:
+            if wincount > 500:
                 showFont("你贏了 獲得一條魚XD", 350, 300)
                 pygame.display.update()
                 time.sleep(3)
@@ -192,30 +202,32 @@ def fish_Game(point, fish, powd, movex, movey, canvas, powdcount):
         else:
             wincount == 0
         # 拉力條
-        powd=powd_checkge(powd, powdcount-1)
-        my_rect3=Rect(50, 0, powd, 20)
+        powd = powd_checkge(powd, powdcount-1)
+        my_rect3 = Rect(50, 0, powd, 20)
         # 魚 座標
-        point=edge_checkge(point, movex, movey)
-        
+        point = edge_checkge(point, movex, movey)
+        # 硬體區
+        fish_motor(point)
         # 繪圖區
         canvas.blit(background, (0, 0))
         if movex or movey:
-            temp_fish=fish_trus(fish, movex, movey)
+            temp_fish = fish_trus(fish, movex, movey)
         temp_fish = fish_size(temp_fish, point)
         canvas.blit(temp_fish, point)
 
-        factor=powd/600
-        powdcolr=blend_color([0, 255, 0], [255, 60, 20], factor)
+        factor = powd/600
+        powdcolr = blend_color([0, 255, 0], [255, 60, 20], factor)
         pygame.draw.rect(canvas, powdcolr, my_rect3)
         # 寫字區
         showFont("拉力:" + str(powd), 0, 0)
         pygame.display.update()
 
+
 def mainWindows():
     while True:
         for event in pygame.event.get():
             if event.type == QUIT:
-            # 接收到退出事件后退出程序
+                # 接收到退出事件后退出程序
                 exit()
             if event.type == KEYDOWN:
                 fish_Game(point, fish, powd, movex, movey, canvas, powdcount)
