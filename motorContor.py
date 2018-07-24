@@ -38,8 +38,6 @@ class StepMotor():
         GPIO.setup(left, GPIO.IN)
         GPIO.setup(right, GPIO.IN)
 
-        #GPIO.add_event_detect(left, GPIO.RISING, callback=self.leftCellBack)
-        #GPIO.add_event_detect(right, GPIO.RISING, callback=self.rightCellBack)
         self.In1 = In1
         self.In2 = In2
         self.left = left
@@ -48,27 +46,27 @@ class StepMotor():
         self.Last_degree = 0
 
         # self.run_Zone()
-
+        # 滑軌跑動多少度 (滑軌最左邊為0最右邊為100)
     def run_degree(self, degree):
-        if degree>100 or degree<0:
+        if degree > 100 or degree < 0:
             return -1
-        tempDegree = degree-self.Last_degree
+        tempDegree = degree - self.Last_degree
         self.Last_degree = degree
         if tempDegree > 0:
-            self.run_clockwise(tempDegree*55)
-        elif tempDegree <0:
-            self.run_counter_clockwise(-tempDegree*55)
+            self.run_clockwise(tempDegree * 55)
+        elif tempDegree < 0:
+            self.run_counter_clockwise(-tempDegree * 55)
         else:
             pass
         return 1
 
-    def run_clockwise(self, turns):  # 向右
+    def run_clockwise(self, turns):  # 向右跑 幾圈
 
         turns = int(turns)
         GPIO.output(self.In2, False)
         time.sleep(0.0001)
         for i in range(turns):
-            if(GPIO.input(self.right) == 1):
+            if (GPIO.input(self.right) == 1):
                 print('右開關觸發 座標到100')
                 self.Last_degree = 100
                 return -1
@@ -76,13 +74,13 @@ class StepMotor():
             time.sleep(0.0001)
             GPIO.output(self.In1, True)
 
-    def run_counter_clockwise(self, turns):  # 向左
+    def run_counter_clockwise(self, turns):  # 向左 幾圈
 
         turns = int(turns)
         GPIO.output(self.In2, True)
         time.sleep(0.0001)
         for i in range(turns):
-            if((GPIO.input(self.left) == 1)):
+            if ((GPIO.input(self.left) == 1)):
                 print('左開關觸發 座標到0')
                 self.Last_degree = 0
                 return -1
@@ -97,18 +95,17 @@ class StepMotor():
         self.run_clockwise(2250)
         self.Last_degree = 50
 
-    def motorTest(self):
+    def motorTest(self):  # 馬達測試
         self.run_clockwise(1100)
         self.run_counter_clockwise(1100)
         self.run_Zone()
-        
 
-    def leftCellBack(self,a):
-        print('left中斷',a)
+    def leftCellBack(self, a):
+        print('left中斷', a)
         pass
 
-    def rightCellBack(self,a):
-        print('right中斷',a)
+    def rightCellBack(self, a):
+        print('right中斷', a)
         pass
 
 

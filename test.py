@@ -1,8 +1,5 @@
-# import GUI
-import threading
-import RPi.GPIO as GPIO
-from motorContor import StepMotor
+if 1==1:
+    print(True)
 
-RLmotor = StepMotor(2,3,4,14)
-RLmotor.run_degree(20)
-GPIO.cleanup()
+for i in ["sd",1,"333",3]:
+    print (i)
